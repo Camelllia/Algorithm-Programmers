@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include <string>
 #include <vector>
 #include <algorithm>
@@ -10,15 +9,21 @@ bool compare(int a, int b)
     return b < a;
 }
 
-long long solution(long long n) {
+vector<int> solution(vector<int> arr) {
+    vector<int> answer;
 
-    long long answer = 0;
+    if (arr.size() == 1)
+    {
+        arr[0] = -1;
+        answer = arr;
+        return answer;
+    }
 
-    string temp = to_string(n);
+    sort(arr.begin(), arr.end(), compare);
 
-    sort(temp.begin(), temp.end(), compare);
+    arr.erase(arr.begin() + arr.size() - 1);
 
-    answer = stoll(temp);
+    answer = arr;
 
     return answer;
 }
