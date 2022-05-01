@@ -11,6 +11,7 @@ int big = -1;
 int small = 7;
 int origin = 0;
 int arr[46];
+int all[46];
 bool isused[46];
 bool checkUsed[46];
 bool correctUsed[46];
