@@ -59,18 +59,20 @@ class Solution {
                 answer+= "L";
             } else {
                 String targetLoc = "";
+                int rx = Character.getNumericValue(rightLoc.charAt(0));
+                int ry = Character.getNumericValue(rightLoc.charAt(1));
+                int lx = Character.getNumericValue(leftLoc.charAt(0));
+                int ly = Character.getNumericValue(leftLoc.charAt(1));
                 if(numbers[i] == 2) {
                     targetLoc = twoLoc;
                     int tx = Character.getNumericValue(targetLoc.charAt(0));
                     int ty = Character.getNumericValue(targetLoc.charAt(1));
-                    int rx = Character.getNumericValue(rightLoc.charAt(0));
-                    int ry = Character.getNumericValue(rightLoc.charAt(1));
-                    int lx = Character.getNumericValue(leftLoc.charAt(0));
-                    int ly = Character.getNumericValue(leftLoc.charAt(1));
-                    if(leftBFS(tx,ty,lx,ly) < rightBFS(tx,ty,rx,ry)) {
+                    int leftDist = BFS(tx,ty,lx,ly);
+                    int rightDist = BFS(tx,ty,rx,ry);
+                    if(leftDist < rightDist) {
                         answer += "L";
                         leftLoc = targetLoc;
-                    } else if(leftBFS(tx,ty,lx,ly) > rightBFS(tx,ty,rx,ry)) {
+                    } else if(leftDist > rightDist) {
                         answer += "R";
                         rightLoc = targetLoc;
                     } else {
@@ -83,18 +85,15 @@ class Solution {
                         }
                     }
                 } else if(numbers[i] == 5) {
-                    System.out.println(leftLoc + " " + rightLoc);
                     targetLoc = fiveLoc;
                     int tx = Character.getNumericValue(targetLoc.charAt(0));
                     int ty = Character.getNumericValue(targetLoc.charAt(1));
-                    int rx = Character.getNumericValue(rightLoc.charAt(0));
-                    int ry = Character.getNumericValue(rightLoc.charAt(1));
-                    int lx = Character.getNumericValue(leftLoc.charAt(0));
-                    int ly = Character.getNumericValue(leftLoc.charAt(1));
-                    if(leftBFS(tx,ty,lx,ly) < rightBFS(tx,ty,rx,ry)) {
+                    int leftDist = BFS(tx,ty,lx,ly);
+                    int rightDist = BFS(tx,ty,rx,ry);
+                    if(leftDist < rightDist) {
                         answer += "L";
                         leftLoc = targetLoc;
-                    } else if(leftBFS(tx,ty,lx,ly) > rightBFS(tx,ty,rx,ry)) {
+                    } else if(leftDist > rightDist) {
                         answer += "R";
                         rightLoc = targetLoc;
                     } else {
@@ -110,14 +109,12 @@ class Solution {
                     targetLoc = eightLoc;
                     int tx = Character.getNumericValue(targetLoc.charAt(0));
                     int ty = Character.getNumericValue(targetLoc.charAt(1));
-                    int rx = Character.getNumericValue(rightLoc.charAt(0));
-                    int ry = Character.getNumericValue(rightLoc.charAt(1));
-                    int lx = Character.getNumericValue(leftLoc.charAt(0));
-                    int ly = Character.getNumericValue(leftLoc.charAt(1));
-                    if(leftBFS(tx,ty,lx,ly) < rightBFS(tx,ty,rx,ry)) {
+                    int leftDist = BFS(tx,ty,lx,ly);
+                    int rightDist = BFS(tx,ty,rx,ry);
+                    if(leftDist < rightDist) {
                         answer += "L";
                         leftLoc = targetLoc;
-                    } else if(leftBFS(tx,ty,lx,ly) > rightBFS(tx,ty,rx,ry)) {
+                    } else if(leftDist > rightDist) {
                         answer += "R";
                         rightLoc = targetLoc;
                     } else {
@@ -133,14 +130,12 @@ class Solution {
                     targetLoc = zeroLoc;
                     int tx = Character.getNumericValue(targetLoc.charAt(0));
                     int ty = Character.getNumericValue(targetLoc.charAt(1));
-                    int rx = Character.getNumericValue(rightLoc.charAt(0));
-                    int ry = Character.getNumericValue(rightLoc.charAt(1));
-                    int lx = Character.getNumericValue(leftLoc.charAt(0));
-                    int ly = Character.getNumericValue(leftLoc.charAt(1));
-                    if(leftBFS(tx,ty,lx,ly) < rightBFS(tx,ty,rx,ry)) {
+                    int leftDist = BFS(tx,ty,lx,ly);
+                    int rightDist = BFS(tx,ty,rx,ry);
+                    if(leftDist < rightDist) {
                         answer += "L";
                         leftLoc = targetLoc;
-                    } else if(leftBFS(tx,ty,lx,ly) > rightBFS(tx,ty,rx,ry)) {
+                    } else if(leftDist > rightDist) {
                         answer += "R";
                         rightLoc = targetLoc;
                     } else {
@@ -158,47 +153,7 @@ class Solution {
         return answer;
     }
 
-    int rightBFS(int targetX, int targetY, int startX, int startY) {
-        if(targetX == startX && targetY == startY) {
-            return 0;
-        }
-        int[][] dist = new int[4][3];
-        for(int i = 0; i < 4; i++) {
-            for(int j = 0; j < 3; j++) {
-                dist[i][j] = -1;
-            }
-        }
-        Queue<int[]> q = new LinkedList<>();
-        q.add(new int[] {startX, startY});
-        dist[startX][startY] = 0;
-
-        while (!q.isEmpty()) {
-            int cur[] = q.poll();
-            int curX = cur[0];
-            int curY = cur[1];
-
-            for(int dir = 0; dir < 4; dir++) {
-                int nx = curX + dx[dir];
-                int ny = curY + dy[dir];
-
-                if(nx < 0 || nx >= 4 || ny < 0 || ny >= 3) {
-                    continue;
-                }
-                if(dist[nx][ny] != -1 || keyPad[nx][ny] == -1) {
-                    continue;
-                }
-
-                q.add(new int[] {nx, ny});
-                dist[nx][ny] = dist[curX][curY] + 1;
-                if(nx == targetX && ny == targetY) {
-                    return dist[targetX][targetY];
-                }
-            }
-        }
-        return 0;
-    }
-
-    int leftBFS(int targetX, int targetY, int startX, int startY) {
+    int BFS(int targetX, int targetY, int startX, int startY) {
         if(targetX == startX && targetY == startY) {
             return 0;
         }
